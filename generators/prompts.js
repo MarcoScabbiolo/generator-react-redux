@@ -10,6 +10,14 @@ const prompts = [
     when: props => !_.isBoolean(props.bootstrap)
   },
   {
+    name: 'semantic-ui',
+    message: 'Use semantic-ui-react?',
+    type: 'confirm',
+    default: false,
+    store: true,
+    when: props => !_.isBoolean(props.semanticui)
+  },
+  {
     name: 'thunk',
     message: 'Use redux-thunk?',
     type: 'confirm',

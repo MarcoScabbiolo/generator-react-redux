@@ -81,6 +81,9 @@ module.exports = class extends Generator {
     if (this.props.bootstrap) {
       pkg.dependencies['react-bootstrap'] = '^0.31.3';
     }
+    if (this.props.semanticui) {
+      pkg.dependencies['semantic-ui-react'] = '^0.76.0';
+    }
     if (this.props.thunk) {
       pkg.dependencies['redux-thunk'] = '^2.2.0';
     }
