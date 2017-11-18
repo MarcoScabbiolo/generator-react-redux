@@ -7,7 +7,7 @@ describe('options', () => {
     chai
       .expect(options.getAll())
       .to.be.an('array')
-      .and.include.deep.members([['bootstrap', options.bootstrap]]);
+      .and.include.deep.members([['style', options.style]]);
   });
 
   test('throws', () => {
@@ -29,14 +29,14 @@ describe('options', () => {
     const dummyConfig = jest.fn();
     const dummyLog = jest.fn();
 
-    options.include(dummyConfig, ['bootstrap', 'path', 'unexistent'], dummyLog);
+    options.include(dummyConfig, ['style', 'path', 'unexistent'], dummyLog);
 
     chai.expect(dummyLog.mock.calls.length).to.equal(1);
     chai.expect(dummyLog.mock.calls[0][0]).to.include('unexistent');
     chai
       .expect(dummyConfig.mock.calls)
       .to.include.deep.members([
-        ['bootstrap', options.bootstrap],
+        ['style', options.style],
         ['path', options.path]
       ]);
   });
@@ -44,10 +44,10 @@ describe('options', () => {
   test('includes string', () => {
     const dummyConfig = jest.fn();
 
-    options.include(dummyConfig, 'bootstrap');
+    options.include(dummyConfig, 'style');
 
     chai
       .expect(dummyConfig.mock.calls)
-      .to.include.deep.members([['bootstrap', options.bootstrap]]);
+      .to.include.deep.members([['style', options.style]]);
   });
 });

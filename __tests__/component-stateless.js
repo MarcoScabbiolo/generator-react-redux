@@ -7,7 +7,7 @@ component({
     name: 'test',
     path: 'generator_tests',
     type: 'stateless',
-    bootstrap: false
+    style: ''
   },
   options: {}
 });

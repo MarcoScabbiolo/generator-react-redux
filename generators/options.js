@@ -3,10 +3,10 @@ const chalk = require('chalk');
 const assert = require('chai').assert;
 
 const options = {
-  bootstrap: {
-    type: Boolean,
+  style: {
+    type: String,
     required: false,
-    desc: 'Use react-boostrap'
+    desc: 'Stylesheet provider selector'
   },
   thunk: {
     type: Boolean,

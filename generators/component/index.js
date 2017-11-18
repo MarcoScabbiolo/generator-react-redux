@@ -5,7 +5,7 @@ const types = require('babel-types');
 const astUtils = require('../astUtils');
 const environment = require('./Environment');
 
-const shared = ['path', 'bootstrap'];
+const shared = ['path', 'style'];
 const prompts = [
   {
     name: 'name',
@@ -79,8 +79,10 @@ module.exports = class extends environment(ReactReduxGenerator) {
   writing() {
     let ast = astUtils.parse(this._templateByTypeContents);
 
-    if (this.props.bootstrap) {
+    if (this.props.style === 'Bootstrap') {
       ast = astUtils.importBootstrap(ast);
+    } else if (this.props.style === 'Semantic UI') {
+      ast = astUtils.importSemantic(ast);
     }
 
     let exportDefaultDeclaration = astUtils.findDefaultExportDeclaration(ast);

@@ -9,6 +9,6 @@ component({
     type: 'section'
   },
   options: {
-    bootstrap: true
+    style: 'Bootstrap'
   }
 });

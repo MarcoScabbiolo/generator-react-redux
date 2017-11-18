@@ -29,7 +29,7 @@ function testSuite(
     skip: false,
     runGenerator: true,
     prompts: {
-      bootstrap: true,
+      style: 'Bootstrap',
       thunk: true,
       form: true,
       normalizr: true
@@ -131,7 +131,7 @@ function testSuite(
     component({
       runGenerator: false,
       options: {
-        bootstrap: generator.props.bootstrap,
+        style: generator.props.style,
         name: 'index',
         path: generator.props.name,
         type: 'section'
