@@ -2,6 +2,7 @@ const _ = require('lodash');
 const generator = require('babel-generator');
 const babylon = require('babylon');
 const types = require('babel-types');
+const assert = require('chai').assert;
 
 function shorthandProperty(name) {
   return types.objectProperty(
@@ -12,23 +13,27 @@ function shorthandProperty(name) {
   );
 }
 
-function singleSpecifierImportDeclaration(identifier, path, isDefault = false) {
+function singleSpecifierImportDeclaration(
+  identifier,
+  path,
+  { isDefault, isNamespace } = {}
+) {
   let localIdentifier = types.identifier(
     typeof identifier === 'string' ? identifier : identifier[0]
   );
-  return types.importDeclaration(
-    [
-      isDefault
-        ? types.importDefaultSpecifier(localIdentifier)
-        : types.importSpecifier(
-            localIdentifier,
-            typeof identifier === 'string'
-              ? localIdentifier
-              : types.identifier(identifier[1])
-          )
-    ],
-    types.stringLiteral(path)
-  );
+  let specifier;
+
+  if (isDefault) {
+    specifier = types.importDefaultSpecifier(localIdentifier);
+  } else if (isNamespace) {
+    specifier = types.importNamespaceSpecifier(localIdentifier);
+  } else {
+    specifier = types.importSpecifier(
+      localIdentifier,
+      typeof identifier === 'string' ? localIdentifier : types.identifier(identifier[1])
+    );
+  }
+  return types.importDeclaration([specifier], types.stringLiteral(path));
 }
 
 function newImport(ast, importDeclaration) {
@@ -79,6 +84,7 @@ function importBootstrap(ast) {
   );
 }
 
+
 function importSemantic(ast) {
   return newImport(
     ast,
@@ -87,6 +93,18 @@ function importSemantic(ast) {
       types.stringLiteral('semantic-ui-react')
     )
   );
+function importAll(ast, toImport, options = {}, callback) {
+  assert.isObject(
+    toImport,
+    'second parameter (toImport) must be an object where the keys are the local identifiers and the values are the paths to import from'
+  );
+  _.forIn(toImport, (filePath, name) => {
+    ast = newImport(ast, singleSpecifierImportDeclaration(name, filePath, options));
+    if (callback) {
+      callback(name, filePath);
+    }
+  });
+  return ast;
 }
 
 module.exports = {
@@ -99,5 +117,6 @@ module.exports = {
   newImport,
   shorthandProperty,
   importBootstrap,
-  importSemantic
+  importSemantic,
+  importAll
 };

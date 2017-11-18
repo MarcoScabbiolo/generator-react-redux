@@ -32,6 +32,17 @@ module.exports = class extends reactReduxEnvironment(Generator) {
     assert.isString(this.props.type, `Property 'type' of the generator must be a string`);
     return this.fs.read(this.templatePath(`${this.props.type}.js`));
   }
+  _invalidateFile(message, filePath, exists = true) {
+    this.log('');
+    this.log(message);
+    this.env.error(`File ${filePath} ${exists ? 'exists' : 'does not exist'}. Aborting`);
+  }
+  _fileDoesNotExistError(filePath, message) {
+    this._invalidateFile(message + chalk.yellow(' does not exist.'), filePath, false);
+  }
+  _fileExistsError(filePath, message) {
+    this._invalidateFile(message + chalk.yellow(' does not exist.'), filePath);
+  }
   _initializing() {
     this.props = Object.assign({}, this.options, this.props);
   }

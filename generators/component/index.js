@@ -120,5 +120,13 @@ module.exports = class extends environment(ReactReduxGenerator) {
       this.destinationPath(this._componentToCreateFilePath),
       astUtils.generate(ast)
     );
+
+    if (this.props.container) {
+      this.composeWith(require.resolve('../container'), {
+        name: this.props.name,
+        path: this.props.path,
+        component: this._componentToCreateFilePath
+      });
+    }
   }
 };

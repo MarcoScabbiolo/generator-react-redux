@@ -1,6 +1,7 @@
 const assert = require('yeoman-assert');
 const extend = require('deep-extend');
 const reactReduxEnvironment = require('../../generators/ReactReduxEnvironment');
+const _ = require('lodash');
 
 function testFileContentsByProp({ testTrue, testFalse, prop, file, content }) {
   if (prop) {
@@ -29,7 +30,16 @@ function testEnvironment(environmentClass, indexOptions = {}) {
   ];
 }
 
+function importsAllActions(actions, file) {
+  return () => {
+    _.forIn(actions, (filePath, name) =>
+      assert.fileContent(file, `import * as ${name} from '${filePath}';`)
+    );
+  };
+}
+
 module.exports = {
   testFileContentsByProp,
-  testEnvironment
+  testEnvironment,
+  importsAllActions
 };

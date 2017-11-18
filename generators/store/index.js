@@ -104,18 +104,18 @@ module.exports = class extends ReactReduxGenerator {
     // Import the reducer
     ast = astUtils.newImport(
       ast,
-      astUtils.singleSpecifierImportDeclaration(
-        'mainReducer',
-        this._rootReducerPath,
-        true
-      )
+      astUtils.singleSpecifierImportDeclaration('mainReducer', this._rootReducerPath, {
+        isDefault: true
+      })
     );
 
     // Import redux-thunk if included
     if (this.props.thunk) {
       ast = astUtils.newImport(
         ast,
-        astUtils.singleSpecifierImportDeclaration('thunk', 'redux-thunk', true)
+        astUtils.singleSpecifierImportDeclaration('thunk', 'redux-thunk', {
+          isDefault: true
+        })
       );
     }
 

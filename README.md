@@ -6,6 +6,25 @@ React &amp; Redux generator, no server side.
 
 Not ready yet! Any [contributions][contribute] are welcome.
 
+## Install
+
+```bash
+git clone https://github.com/MarcoScabbiolo/generator-react-app-redux.git
+cd generator-react-app-redux
+npm install
+npm link
+```
+
+## Run
+
+Install [Yeoman][yeoman] if you don't have it yet.
+
+Run the generator:
+```bash
+yo generator-react-app-redux
+```
+
+[yeoman]: http://yeoman.io/
 [contribute]: Contributing.md
 [travis]: https://travis-ci.org/MarcoScabbiolo/generator-react-app-redux.svg?branch=master "Travis CI build status"
 [coveralls-status]: https://coveralls.io/github/MarcoScabbiolo/generator-react-app-redux?branch=master

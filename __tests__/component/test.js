@@ -6,6 +6,8 @@ const reactReduxEnvironment = require('../../generators/ReactReduxEnvironment');
 const environment = require('../../generators/component/Environment');
 const testUtils = require('../_utils/testUtils');
 const chai = require('chai');
+const container = require('../container/test');
+const _ = require('lodash');
 
 const [envIndex, envFoo] = testUtils.testEnvironment(environment, { type: 'section' });
 
@@ -65,6 +67,21 @@ function testSuite(
       content: "import * as B from 'react-bootstrap';"
     });
   });
+
+  if (generator.props.container) {
+    container({
+      runGenerator: false,
+      componentName:
+        generator.props.type === 'stateless'
+          ? generator.props.name
+          : _.upperFirst(generator.props.name),
+      options: {
+        name: generator.props.name,
+        path: generator.props.path,
+        component: generator._componentToCreateFilePath
+      }
+    });
+  }
 }
 
 module.exports = testSuite;

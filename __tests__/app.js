@@ -5,6 +5,7 @@ const helpers = require('yeoman-test');
 const fs = require('fs-extra');
 const entry = require('./entry/test.js');
 const expect = require('chai').expect;
+const astUtils = require('../generators/astUtils');
 
 const dummyDependencies = [[helpers.createDummyGenerator(), 'generator-node:app']];
 
@@ -115,4 +116,8 @@ describe('generator-react-app-redux:app:2', () => {
     },
     prompts: {}
   });
+});
+
+describe('ast utils completion', () => {
+  assert.throws(() => astUtils.importAll({}, 'something'));
 });

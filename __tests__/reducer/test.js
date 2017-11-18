@@ -79,14 +79,13 @@ function testSuite(
         );
       });
     } else {
-      test('imports all the actions', () => {
-        _.forIn(generator.props.actions, (filePath, name) =>
-          assert.fileContent(
-            generator._reducerToCreateFilePath,
-            `import * as ${name} from '${filePath}';`
-          )
-        );
-      });
+      test(
+        'imports all the actions',
+        testUtils.importsAllActions(
+          generator.props.actions,
+          generator._reducerToCreateFilePath
+        )
+      );
     }
   });
 }

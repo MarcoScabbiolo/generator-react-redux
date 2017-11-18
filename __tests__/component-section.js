@@ -6,7 +6,8 @@ component({
   prompts: {
     name: 'test',
     path: 'generator_tests',
-    type: 'section'
+    type: 'section',
+    container: false
   },
   options: {
     style: 'Bootstrap'
