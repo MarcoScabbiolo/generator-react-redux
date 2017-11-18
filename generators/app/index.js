@@ -6,7 +6,7 @@ const sharedOptions = require('../options');
 const sharedPrompts = require('../prompts');
 const astUtils = require('../astUtils');
 
-const shared = ['bootstrap', 'thunk', 'form', 'normalizr'];
+const shared = ['style', 'thunk', 'form', 'normalizr'];
 
 module.exports = class extends Generator {
   constructor(args, options) {
@@ -30,7 +30,7 @@ module.exports = class extends Generator {
     return this.prompt(sharedPrompts.get(this.props, shared)).then(props => {
       this.props = extend(this.props, props);
       this.config.set({
-        bootstrapEnabled: this.props.bootstrap,
+        styleEnabled: this.props.style,
         thunkEnabled: this.props.thunk,
         formsEnabled: this.props.form
       });
@@ -38,7 +38,7 @@ module.exports = class extends Generator {
 
       this.composeWith(require.resolve('../entry'), {
         name: 'index',
-        bootstrap: this.props.bootstrap,
+        style: this.props.style,
         thunk: this.props.thunk,
         normalizr: this.props.normalizr,
         form: this.props.form,
@@ -67,7 +67,7 @@ module.exports = class extends Generator {
 
     let component = astUtils.parse(this.fs.read(this.templatePath('component.js')));
 
-    if (this.props.bootstrap) {
+    if (this.props.style === 'Bootstrap') {
       component = astUtils.importBootstrap(component);
     }
 
@@ -78,12 +78,21 @@ module.exports = class extends Generator {
 
     let pkg = this._extendJSON('package.json', undefined, false);
 
-    if (this.props.bootstrap) {
-      pkg.dependencies['react-bootstrap'] = '^0.31.3';
+    switch (this.props.style) {
+      case 'Bootstrap':
+        return pkg.dependencies['react-bootstrap'] = '^0.31.3';
+      case 'Semantic UI':
+        return pkg.dependencies['semantic-ui-react'] = '^0.76.0';
+      default:
+        return;
     }
+<<<<<<< HEAD
     if (this.props.semanticui) {
       pkg.dependencies['semantic-ui-react'] = '^0.76.0';
     }
+=======
+
+>>>>>>> master
     if (this.props.thunk) {
       pkg.dependencies['redux-thunk'] = '^2.2.0';
     }

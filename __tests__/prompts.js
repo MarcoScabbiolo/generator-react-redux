@@ -4,10 +4,10 @@ const chai = require('chai');
 
 describe('prompts', () => {
   test('gets and binds the props', () => {
-    let single = prompts.get({}, 'bootstrap');
+    let single = prompts.get({}, 'style');
     let multiple = prompts.get(
       {
-        bootstrap: true,
+        style: 'Bootstrap',
         path: ''
       },
       ['bootstrap', 'path']

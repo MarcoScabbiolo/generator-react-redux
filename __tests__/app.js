@@ -20,7 +20,7 @@ describe('generator-react-app-redux:app', () => {
       .run(path.join(__dirname, '../generators/app'))
       .withOptions({ license: false })
       .withPrompts({
-        bootstrap: true,
+        style: 'Bootstrap',
         form: true,
         normalizr: true
       })
@@ -70,7 +70,7 @@ describe('generator-react-app-redux:app', () => {
     runGenerator: false,
     options: {
       name: 'index',
-      bootstrap: true,
+      style: 'Bootstrap',
       form: true,
       normalizr: true,
       thunk: true,
@@ -87,7 +87,7 @@ describe('generator-react-app-redux:app:2', () => {
       .run(path.join(__dirname, '../generators/app'))
       .withOptions({ license: false })
       .withPrompts({
-        bootstrap: false,
+        style: 'Bootstrap',
         form: false,
         normalizr: false,
         thunk: false
@@ -106,7 +106,7 @@ describe('generator-react-app-redux:app:2', () => {
     runGenerator: false,
     options: {
       name: 'index',
-      bootstrap: false,
+      style: 'Bootstrap',
       form: false,
       normalizr: false,
       thunk: false,

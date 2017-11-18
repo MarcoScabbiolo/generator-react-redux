@@ -6,7 +6,7 @@ const assert = require('chai').assert;
 const types = require('babel-types');
 const astUtils = require('../astUtils');
 
-const shared = ['bootstrap', 'thunk', 'path', 'normalizr', 'form'];
+const shared = ['style', 'thunk', 'path', 'normalizr', 'form'];
 const prompts = [
   {
     name: 'name',
@@ -56,7 +56,7 @@ module.exports = class extends environment(ReactReduxGenerator) {
       this.composeWith(require.resolve('../component'), {
         name: 'index',
         path: this.props.name,
-        bootstrap: this.props.bootstrap,
+        style: this.props.style,
         container: true,
         type: 'section'
       });

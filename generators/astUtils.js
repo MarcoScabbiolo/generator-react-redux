@@ -79,6 +79,16 @@ function importBootstrap(ast) {
   );
 }
 
+function importSemantic(ast) {
+  return newImport(
+    ast,
+    types.importDeclaration(
+      [types.importNamespaceSpecifier(types.identifier('S'))],
+      types.stringLiteral('semantic-ui-react')
+    )
+  );
+}
+
 module.exports = {
   parse,
   generate,
@@ -88,5 +98,6 @@ module.exports = {
   findDefaultExportDeclaration,
   newImport,
   shorthandProperty,
-  importBootstrap
+  importBootstrap,
+  importSemantic
 };
