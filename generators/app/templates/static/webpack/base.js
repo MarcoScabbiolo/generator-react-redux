@@ -1,7 +1,7 @@
 const log = require('log');
 const _ = require('lodash');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const entries = require('./entries');
 const config = require('./config.json');
 const path = require('path');
@@ -36,7 +36,7 @@ _.forOwn(entries, (entry, name) => {
   }
 });
 
-const extractSass = new ExtractTextPlugin({
+const extractCss = new ExtractTextPlugin({
   filename: '[name].[contenthash].css',
   disable: development
 });
@@ -57,8 +57,22 @@ const baseWebpackConfiguration = {
         }
       },
       {
+        test: /\.css$/,
+        use: extractCss.extract({
+          use: [
+            {
+              loader: "css-loader",
+              options: {
+                sourceMap: development
+              }
+            }
+          ],
+          fallback: "style-loader"
+        })
+      },
+      {
         test: /\.scss$/,
-        use: extractSass.extract({
+        use: extractCss.extract({
           use: [
             { 
               loader: "css-loader", 
@@ -73,9 +87,15 @@ const baseWebpackConfiguration = {
               }
             }
           ],
-          // use style-loader in development
           fallback: "style-loader"
         })
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2)$/,
+        loader: 'file-loader',
+        options: {
+          name: 'fonts/[name].[ext]'
+        }
       }
     ]
   },
@@ -90,7 +110,7 @@ const baseWebpackConfiguration = {
     }
   },
   plugins: htmlEntries.concat([
-    extractSass
+    extractCss
   ])
 };
 

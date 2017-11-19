@@ -6,12 +6,19 @@ const sharedOptions = require('../options');
 const sharedPrompts = require('../prompts');
 const astUtils = require('../astUtils');
 const types = require('babel-types');
+const _ = require('lodash');
 
 const shared = ['style', 'thunk', 'form', 'normalizr'];
 
 module.exports = class extends Generator {
   constructor(args, options) {
     super(args, options);
+
+    this.option('webpackdashboard', {
+      type: Boolean,
+      required: false,
+      desc: 'Use webpack-dashboard'
+    });
 
     sharedOptions.include(this.option.bind(this), shared, this.log.bind(this));
   }
@@ -28,7 +35,17 @@ module.exports = class extends Generator {
     this.log(chalk.green('React & Redux') + ' generator. Feel free to contribute!');
     this.log('');
 
-    return this.prompt(sharedPrompts.get(this.props, shared)).then(props => {
+    return this.prompt(
+      sharedPrompts.get(this.props, shared).concat([
+        {
+          name: 'webpackdashboard',
+          type: 'confirm',
+          default: false,
+          store: true,
+          when: !_.isBoolean(this.options.webpackdashboard)
+        }
+      ])
+    ).then(props => {
       this.props = extend(this.props, props);
       this.config.set({
         styleEnabled: this.props.style,
@@ -72,10 +89,16 @@ module.exports = class extends Generator {
       component = astUtils.importBootstrap(component);
       component = astUtils.newImport(
         component,
-        astUtils.singleSpecifierImportDeclaration(
-          'bootstrapConfig',
-          'bootstrap/package',
-          { isDefault: true }
+        types.importDeclaration(
+          [],
+          types.stringLiteral('../../node_modules/bootstrap/dist/css/bootstrap.css')
+        )
+      );
+      component = astUtils.newImport(
+        component,
+        types.importDeclaration(
+          [],
+          types.stringLiteral('../../node_modules/bootstrap/dist/css/bootstrap-theme.css')
         )
       );
       component.program.body.splice(
@@ -106,13 +129,16 @@ module.exports = class extends Generator {
     switch (this.props.style) {
       case 'Bootstrap':
         pkg.dependencies['react-bootstrap'] = '^0.31.3';
-        pkg.dependencies.bootstrap = '^4.0.0-beta.2';
+        pkg.dependencies.bootstrap = '^3.3.7';
         break;
       case 'Semantic UI':
         pkg.dependencies['semantic-ui-react'] = '^0.76.0';
         break;
     }
-
+    if (this.props.webpackdashboard) {
+      pkg.devDependencies['webpack-dashboard'] = '^1.0.2';
+      pkg.scripts.start = 'webpack-dashboard -- ' + pkg.scripts.start;
+    }
     if (this.props.thunk) {
       pkg.dependencies['redux-thunk'] = '^2.2.0';
     }
@@ -126,6 +152,10 @@ module.exports = class extends Generator {
     pkg.scripts.pretest += ' --fix';
 
     this.fs.writeJSON(this.destinationPath('package.json'), pkg);
+
+    let webpack = this.fs.readJSON(this.templatePath('webpack-config.json'), {});
+    webpack.dashboard = this.props.webpackdashboard;
+    this.fs.writeJSON(this.destinationPath('webpack/config.json'), webpack);
 
     this._extendJSON('.babelrc');
   }

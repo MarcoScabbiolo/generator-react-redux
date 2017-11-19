@@ -15,6 +15,21 @@ const assertBabelrc = babelrc =>
     .which.is.an('array')
     .and.includes('react-hot-loader/babel');
 
+const assertAppComponentBootstrapFileContents = (includes = true) => {
+  let assertComponent = includes ? assert.fileContent : assert.noFileContent;
+  return function() {
+    assertComponent('src/components/App.js', "import * as B from 'react-bootstrap';");
+    assertComponent(
+      'src/components/App.js',
+      "import '../../node_modules/bootstrap/dist/css/bootstrap.css';"
+    );
+    assertComponent(
+      'src/components/App.js',
+      "import '../../node_modules/bootstrap/dist/css/bootstrap-theme.css';"
+    );
+  };
+};
+
 describe('generator-react-app-redux:app', () => {
   test('generator completes', () =>
     helpers
@@ -23,7 +38,8 @@ describe('generator-react-app-redux:app', () => {
       .withPrompts({
         style: 'Bootstrap',
         form: true,
-        normalizr: true
+        normalizr: true,
+        webpackdashboard: true
       })
       .withGenerators(dummyDependencies));
 
@@ -47,29 +63,28 @@ describe('generator-react-app-redux:app', () => {
   });
 
   describe('file contents', () => {
-    test('imports react-boostrap', () => {
-      assert.fileContent(
-        'src/components/App.js',
-        "import * as B from 'react-bootstrap';"
-      );
-      assert.fileContent(
-        'src/components/App.js',
-        "require('bootstrap/' + bootstrapConfig.sass);"
-      );
-    });
+    test('imports react-boostrap', assertAppComponentBootstrapFileContents());
 
     test('babelrc', () => fs.readJson('.babelrc').then(assertBabelrc));
-  });
 
-  test('dependencies', () =>
-    fs.readJson('package.json').then(pkg => {
-      expect(pkg.dependencies).to.include.all.keys(
-        'redux-thunk',
-        'react-bootstrap',
-        'redux-form',
-        'normalizr'
-      );
-    }));
+    test('dependencies', () =>
+      fs.readJson('package.json').then(pkg => {
+        expect(pkg.scripts.start.indexOf('webpack-dashboard')).to.not.equal(-1);
+        expect(pkg.dependencies).to.include.all.keys(
+          'redux-thunk',
+          'react-bootstrap',
+          'redux-form',
+          'normalizr'
+        );
+        expect(pkg.devDependencies).to.include.all.keys('webpack-dashboard');
+      }));
+
+    test('webpack config', () =>
+      fs.readJson('webpack/config.json').then(webpack => {
+        expect(webpack.defaultTemplate).to.equal('ejs');
+        expect(webpack.dashboard).to.equal(true);
+      }));
+  });
 
   entry({
     runGenerator: false,
@@ -87,7 +102,7 @@ describe('generator-react-app-redux:app', () => {
 });
 
 describe('generator-react-app-redux:app:2', () => {
-  test('keeps original .babelrc', () =>
+  test('generator completes', () =>
     helpers
       .run(path.join(__dirname, '../generators/app'))
       .withOptions({ license: false })
@@ -95,17 +110,43 @@ describe('generator-react-app-redux:app:2', () => {
         style: 'Bootstrap',
         form: false,
         normalizr: false,
-        thunk: false
+        thunk: false,
+        dashboard: false
       })
       .withGenerators(dummyDependencies)
       .inTmpDir(dir => {
         fs.writeFileSync(path.join(dir, '.babelrc'), '{ "dummy": "dummy" }');
-      })
-      .then(() => fs.readJson('.babelrc'))
-      .then(babelrc => {
+      }));
+
+  describe('file contents', () => {
+    test('keeps original .babelrc', () =>
+      fs.readJson('.babelrc').then(babelrc => {
         assertBabelrc(babelrc);
         expect(babelrc).to.have.property('dummy', 'dummy');
       }));
+
+    test(
+      'does not import react-boostrap',
+      assertAppComponentBootstrapFileContents(false)
+    );
+
+    test('dependencies', () =>
+      fs.readJson('package.json').then(pkg => {
+        expect(pkg.scripts.start.indexOf('webpack-dashboard')).to.equal(-1);
+        expect(pkg.dependencies).not.to.include.any.keys(
+          'redux-thunk',
+          'react-bootstrap',
+          'redux-form',
+          'normalizr'
+        );
+        expect(pkg.devDependencies).not.to.include.any.keys('webpack-dashboard');
+      }));
+
+    test('webpack config', () =>
+      fs.readJson('webpack/config.json').then(webpack => {
+        expect(webpack.dashboard).to.equal(false);
+      }));
+  });
 
   entry({
     runGenerator: false,
