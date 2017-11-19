@@ -20,8 +20,8 @@ function testEnvironment(environmentClass, indexOptions = {}) {
     new (environmentClass(reactReduxEnvironment()))([envPath, name]);
   return [
     () => {
-      let e = env('index', '');
-      let options = { path: '', name: 'index', skipEntryDirectory: true };
+      let e = env('main', '');
+      let options = { path: '', name: 'main', skipEntryDirectory: true };
       options = extend(options, indexOptions);
       e.forceConfiguration(options, {});
       return e;

@@ -41,7 +41,7 @@ module.exports = class extends reactReduxEnvironment(Generator) {
     this._invalidateFile(message + chalk.yellow(' does not exist.'), filePath, false);
   }
   _fileExistsError(filePath, message) {
-    this._invalidateFile(message + chalk.yellow(' does not exist.'), filePath);
+    this._invalidateFile(message + chalk.yellow(' already exists.'), filePath);
   }
   _initializing() {
     this.props = Object.assign({}, this.options, this.props);

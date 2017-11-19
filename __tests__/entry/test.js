@@ -1,10 +1,11 @@
-'use strict';
+('use strict');
 const path = require('path');
 const assert = require('yeoman-assert');
 const helpers = require('yeoman-test');
 const astUtils = require('../../generators/astUtils');
 const testUtils = require('../_utils/testUtils');
 const fs = require('fs-extra');
+const action = require('../action/test');
 const store = require('../store/test');
 const reducer = require('../reducer/test');
 const component = require('../component/test');
@@ -12,7 +13,7 @@ const reactReduxEnvironment = require('../../generators/ReactReduxEnvironment');
 const environment = require('../../generators/entry/Environment');
 const chai = require('chai');
 
-const [envIndex, envFoo] = testUtils.testEnvironment(environment);
+const [envMain, envFoo] = testUtils.testEnvironment(environment);
 const entryInAstArray = (e, generator) =>
   e.type === 'ObjectProperty' &&
   e.key.name === generator.props.name &&
@@ -53,14 +54,14 @@ function testSuite(
         });
 
         test('html entry file path', () => {
-          chai.expect(envIndex()._htmlEntryFilePath).to.equal('index.ejs');
-          chai.expect(envFoo()._htmlEntryFilePath).to.equal('foo/bar.ejs');
+          chai.expect(envMain()._htmlEntryFilePath).to.equal('src/main.ejs');
+          chai.expect(envFoo()._htmlEntryFilePath).to.equal('src/foo/bar.ejs');
         });
 
         test('related actions', () => {
-          chai.expect(envIndex()._relatedActions).to.deep.equal({
+          chai.expect(envMain()._relatedActions).to.deep.equal({
             app: 'actions/app',
-            index: 'actions/index'
+            main: 'actions/main'
           });
           chai.expect(envFoo()._relatedActions).to.deep.equal({
             app: 'actions/app',
@@ -104,6 +105,14 @@ function testSuite(
     test('adds entry', () => {
       if (fs.existsSync('webpack/entries.js')) {
         assertAddedEntry(generator);
+      }
+    });
+
+    action({
+      runGenerator: false,
+      options: {
+        name: generator.props.name,
+        path: generator.props.path
       }
     });
 

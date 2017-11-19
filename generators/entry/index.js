@@ -38,6 +38,11 @@ module.exports = class extends environment(ReactReduxGenerator) {
   }
   prompting() {
     return this._prompting().then(() => {
+      this.composeWith(require.resolve('../action'), {
+        name: this.props.name,
+        path: this.props.path
+      });
+
       this.composeWith(require.resolve('../store'), {
         name: this.props.name,
         thunk: this.props.thunk,

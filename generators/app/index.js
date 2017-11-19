@@ -37,8 +37,8 @@ module.exports = class extends Generator {
       this.config.save();
 
       this.composeWith(require.resolve('../entry'), {
-        name: 'index',
         style: this.props.style,
+        name: 'main',
         thunk: this.props.thunk,
         normalizr: this.props.normalizr,
         form: this.props.form,
@@ -80,19 +80,12 @@ module.exports = class extends Generator {
 
     switch (this.props.style) {
       case 'Bootstrap':
-        return pkg.dependencies['react-bootstrap'] = '^0.31.3';
+        pkg.dependencies['react-bootstrap'] = '^0.31.3';
+        break;
       case 'Semantic UI':
-        return pkg.dependencies['semantic-ui-react'] = '^0.76.0';
-      default:
-        return;
+        pkg.dependencies['semantic-ui-react'] = '^0.76.0';
+        break;
     }
-<<<<<<< HEAD
-    if (this.props.semanticui) {
-      pkg.dependencies['semantic-ui-react'] = '^0.76.0';
-    }
-=======
-
->>>>>>> master
     if (this.props.thunk) {
       pkg.dependencies['redux-thunk'] = '^2.2.0';
     }

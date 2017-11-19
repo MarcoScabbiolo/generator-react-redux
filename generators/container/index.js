@@ -6,7 +6,7 @@ const astUtils = require('../astUtils');
 const environment = require('./Environment');
 const _ = require('lodash');
 
-const shared = ['path', 'bootstrap'];
+const shared = ['path'];
 const prompts = [
   {
     name: 'name',
@@ -75,7 +75,7 @@ module.exports = class extends environment(ReactReduxGenerator) {
 
     ast = astUtils.newImport(
       ast,
-      astUtils.singleSpecifierImportDeclaration(componentName, this.props.component, {
+      astUtils.singleSpecifierImportDeclaration(componentName, this._componentsPath(), {
         isDefault: true
       })
     );

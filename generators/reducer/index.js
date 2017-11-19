@@ -63,12 +63,39 @@ module.exports = class extends environment(ReactReduxGenerator) {
       desc:
         'Object of reducers to import. The key is the local identifier and the key of the reducer in the combination and the value is the path to the file'
     });
+    this.option('sectionReducerFilePath', {
+      type: String,
+      required: false,
+      desc:
+        'The path to the sections reducer where the section reducer to create will be added to the combination'
+    });
   }
   initializing() {
     return this._initializing();
   }
   prompting() {
     return this._prompting();
+  }
+  _findReducerCombination(ast) {
+    return astUtils.findSingleVariableDeclaration(ast, 'const', 'reducer').declarations[0]
+      .init.arguments[0].properties;
+  }
+  _addSection() {
+    let destinationPath = this.destinationPath(this._secionsReducerToCombineWithFilePath);
+    let ast = astUtils.parse(this.fs.read(destinationPath));
+
+    ast = astUtils.newImport(
+      ast,
+      astUtils.singleSpecifierImportDeclaration(
+        this.props.name,
+        this._reducerToCreatePath,
+        { isDefault: true }
+      )
+    );
+
+    this._findReducerCombination(ast).push(astUtils.shorthandProperty(this.props.name));
+
+    this.fs.write(destinationPath, astUtils.generate(ast));
   }
   writing() {
     let ast = astUtils.parse(this._templateByTypeContents);
@@ -85,12 +112,15 @@ module.exports = class extends environment(ReactReduxGenerator) {
 
     // Combine reducers
     if (this.props.type === 'composition' && this.props.reducers) {
-      let combination = astUtils.findSingleVariableDeclaration(ast, 'const', 'reducer')
-        .declarations[0].init.arguments[0].properties;
+      let combination = this._findReducerCombination(ast);
 
       ast = astUtils.importAll(ast, this.props.reducers, { isDefault: true }, name =>
         combination.push(astUtils.shorthandProperty(name))
       );
+    }
+
+    if (this.props.type === 'section') {
+      this._addSection();
     }
 
     this.fs.write(

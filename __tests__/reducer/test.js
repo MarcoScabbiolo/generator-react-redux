@@ -9,7 +9,7 @@ const environment = require('../../generators/reducer/Environment');
 const chai = require('chai');
 require('chai').should();
 
-const [envIndex, envFoo] = testUtils.testEnvironment(environment, { type: 'section' });
+const [envMain, envFoo] = testUtils.testEnvironment(environment, { type: 'section' });
 
 function testSuite(
   options = {
@@ -26,7 +26,8 @@ function testSuite(
       }
     }
   },
-  testEnvironment = false
+  testEnvironment = false,
+  inTmpDir = () => null
 ) {
   var generator = new (environment(reactReduxEnvironment()))();
   generator.forceConfiguration(options.options, options.prompts);
@@ -39,9 +40,9 @@ function testSuite(
         });
 
         test('reducer to create path', () => {
-          envIndex()._reducerToCreatePath.should.equal('reducers/index/sections/index');
-          envIndex()._reducerToCreateFilePath.should.equal(
-            'src/reducers/index/sections/index.js'
+          envMain()._reducerToCreatePath.should.equal('reducers/main/sections/main');
+          envMain()._reducerToCreateFilePath.should.equal(
+            'src/reducers/main/sections/main.js'
           );
           envFoo()._reducerToCreatePath.should.equal('reducers/foo/bar');
           envFoo()._reducerToCreateFilePath.should.equal('src/reducers/foo/bar.js');
@@ -53,7 +54,8 @@ function testSuite(
         helpers
           .run(path.join(__dirname, '../../generators/reducer'))
           .withOptions(options.options)
-          .withPrompts(options.prompts));
+          .withPrompts(options.prompts)
+          .inTmpDir(inTmpDir));
     }
 
     test('creates files', () => {
@@ -86,6 +88,15 @@ function testSuite(
           generator._reducerToCreateFilePath
         )
       );
+    }
+
+    if (generator.props.type === 'section') {
+      test('adds the section to the sections combination', () => {
+        assert.fileContent(
+          generator._secionsReducerToCombineWithFilePath,
+          `import ${generator.props.name} from '${generator._reducerToCreatePath}';`
+        );
+      });
     }
   });
 }

@@ -81,14 +81,18 @@ module.exports = class extends ReactReduxGenerator {
     // Import sections reducer
     ast = astUtils.newImport(
       ast,
-      astUtils.singleSpecifierImportDeclaration('sections', this._sectionsReducerPath)
+      astUtils.singleSpecifierImportDeclaration('sections', this._sectionsReducerPath, {
+        isDefault: true
+      })
     );
     toCombine.push(astUtils.shorthandProperty('sections'));
 
     // Import entities reducer
     ast = astUtils.newImport(
       ast,
-      astUtils.singleSpecifierImportDeclaration('entities', this._entitiesReducerPath)
+      astUtils.singleSpecifierImportDeclaration('entities', this._entitiesReducerPath, {
+        isDefault: true
+      })
     );
     toCombine.push(astUtils.shorthandProperty('entities'));
 

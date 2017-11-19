@@ -10,7 +10,7 @@ const fs = require('fs-extra');
 const _ = require('lodash');
 
 const GENERATOR_DIR = '../../generators/container';
-const [envIndex, envFoo] = testUtils.testEnvironment(environment);
+const [envMain, envFoo] = testUtils.testEnvironment(environment);
 
 function testSuite(
   options = {
@@ -42,10 +42,10 @@ function testSuite(
         });
 
         test('container to create path', () => {
-          chai.expect(envIndex()._containerToCreatePath).to.equal('containers/index');
+          chai.expect(envMain()._containerToCreatePath).to.equal('containers/main');
           chai
-            .expect(envIndex()._containerToCreateFilePath)
-            .to.equal('src/containers/index.js');
+            .expect(envMain()._containerToCreateFilePath)
+            .to.equal('src/containers/main.js');
           chai.expect(envFoo()._containerToCreatePath).to.equal('containers/foo/bar');
           chai
             .expect(envFoo()._containerToCreateFilePath)
@@ -74,7 +74,7 @@ function testSuite(
     test('imports the component', () => {
       assert.fileContent(
         generator._containerToCreateFilePath,
-        `import ${options.componentName} from '${generator.props.component}';`
+        `import ${options.componentName} from '${generator._componentsPath()}';`
       );
     });
 

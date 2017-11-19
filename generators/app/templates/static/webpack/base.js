@@ -13,7 +13,7 @@ _.forOwn(entries, (entry, name) => {
   if (typeof entry === 'string') {
     jsEntries[name] = entry;
     htmlEntries.push(
-      new HtmlWebpackPlugin({ template: `${name}.${config.defaultTemplate}` })
+      new HtmlWebpackPlugin({ template: `src/${name}.${config.defaultTemplate}` })
     );
   } else {
     if (!entry.file) {
@@ -26,7 +26,7 @@ _.forOwn(entries, (entry, name) => {
         new HtmlWebpackPlugin({
           chunks: [name],
           title: name,
-          template: `${name}.${entry.template || config.defaultTemplate}`
+          template: `src/${name}.${entry.template || config.defaultTemplate}`
         })
       );
     }

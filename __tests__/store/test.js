@@ -56,6 +56,17 @@ function testSuite(
         );
       });
 
+      test('creates root reducer', () => {
+        assert.fileContent(
+          generator._rootReducerFilePath,
+          `import entities from '${generator._entitiesReducerPath}';`
+        );
+        assert.fileContent(
+          generator._rootReducerFilePath,
+          `import sections from '${generator._sectionsReducerPath}';`
+        );
+      });
+
       testUtils.testFileContentsByProp({
         testTrue: 'imports redux-thunk',
         testFalse: 'does not import redux-thunk',

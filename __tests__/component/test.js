@@ -9,7 +9,7 @@ const chai = require('chai');
 const container = require('../container/test');
 const _ = require('lodash');
 
-const [envIndex, envFoo] = testUtils.testEnvironment(environment, { type: 'section' });
+const [envMain, envFoo] = testUtils.testEnvironment(environment, { type: 'section' });
 
 function testSuite(
   options = {
@@ -36,10 +36,10 @@ function testSuite(
         });
 
         test('component to create path', () => {
-          chai.expect(envIndex()._componentToCreatePath).to.equal('components/index');
+          chai.expect(envMain()._componentToCreatePath).to.equal('components/main');
           chai
-            .expect(envIndex()._componentToCreateFilePath)
-            .to.equal('src/components/index.js');
+            .expect(envMain()._componentToCreateFilePath)
+            .to.equal('src/components/main.js');
           chai.expect(envFoo()._componentToCreatePath).to.equal('components/foo/bar');
           chai
             .expect(envFoo()._componentToCreateFilePath)

@@ -70,8 +70,8 @@ describe('generator-react-app-redux:app', () => {
   entry({
     runGenerator: false,
     options: {
-      name: 'index',
       style: 'Bootstrap',
+      name: 'main',
       form: true,
       normalizr: true,
       thunk: true,
@@ -106,8 +106,8 @@ describe('generator-react-app-redux:app:2', () => {
   entry({
     runGenerator: false,
     options: {
-      name: 'index',
       style: 'Bootstrap',
+      name: 'main',
       form: false,
       normalizr: false,
       thunk: false,

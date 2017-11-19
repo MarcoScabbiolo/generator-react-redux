@@ -1,9 +1,14 @@
+const path = require('path');
+
 class DummyBaseClass {}
 
 module.exports = (BaseClass = DummyBaseClass) =>
   class extends BaseClass {
     get _htmlEntryFilePath() {
-      return this.props.skipEntryDirectory ? 'index.ejs' : this._resolvePath() + '.ejs';
+      let basePath = this.props.skipEntryDirectory
+        ? this.props.name
+        : this._resolvePath();
+      return path.join('src', basePath + '.ejs');
     }
     get _relatedActions() {
       let actions = { app: 'actions/app' };
