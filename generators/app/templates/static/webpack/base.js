@@ -1,12 +1,15 @@
 const log = require('log');
 const _ = require('lodash');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const entries = require('./entries');
 const config = require('./config.json');
 const path = require('path');
 
 var jsEntries = {};
 var htmlEntries = [];
+
+const development = process.env.NODE_ENV === 'dev';
 
 // Process entries file
 _.forOwn(entries, (entry, name) => {
@@ -33,6 +36,11 @@ _.forOwn(entries, (entry, name) => {
   }
 });
 
+const extractSass = new ExtractTextPlugin({
+  filename: '[name].[contenthash].css',
+  disable: development
+});
+
 const baseWebpackConfiguration = {
   entry: jsEntries,
   output: {
@@ -47,6 +55,27 @@ const baseWebpackConfiguration = {
         use: {
           loader: 'babel-loader'
         }
+      },
+      {
+        test: /\.scss$/,
+        use: extractSass.extract({
+          use: [
+            { 
+              loader: "css-loader", 
+              options: {
+                sourceMap: development
+              } 
+            },
+            { 
+              loader: "sass-loader",
+              options: {
+                sourceMap: development
+              }
+            }
+          ],
+          // use style-loader in development
+          fallback: "style-loader"
+        })
       }
     ]
   },
@@ -60,7 +89,9 @@ const baseWebpackConfiguration = {
       stores: path.resolve(__dirname, '../src/stores/')
     }
   },
-  plugins: htmlEntries.concat([])
+  plugins: htmlEntries.concat([
+    extractSass
+  ])
 };
 
 module.exports = baseWebpackConfiguration;

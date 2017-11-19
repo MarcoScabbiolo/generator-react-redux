@@ -5,6 +5,7 @@ const extend = require('deep-extend');
 const sharedOptions = require('../options');
 const sharedPrompts = require('../prompts');
 const astUtils = require('../astUtils');
+const types = require('babel-types');
 
 const shared = ['style', 'thunk', 'form', 'normalizr'];
 
@@ -69,6 +70,30 @@ module.exports = class extends Generator {
 
     if (this.props.style === 'Bootstrap') {
       component = astUtils.importBootstrap(component);
+      component = astUtils.newImport(
+        component,
+        astUtils.singleSpecifierImportDeclaration(
+          'bootstrapConfig',
+          'bootstrap/package',
+          { isDefault: true }
+        )
+      );
+      component.program.body.splice(
+        astUtils.lastImportIndex(component),
+        0,
+        types.expressionStatement(
+          types.callExpression(types.identifier('require'), [
+            types.binaryExpression(
+              '+',
+              types.stringLiteral('bootstrap/'),
+              types.memberExpression(
+                types.identifier('bootstrapConfig'),
+                types.identifier('sass')
+              )
+            )
+          ])
+        )
+      );
     }
 
     this.fs.write(
@@ -81,11 +106,13 @@ module.exports = class extends Generator {
     switch (this.props.style) {
       case 'Bootstrap':
         pkg.dependencies['react-bootstrap'] = '^0.31.3';
+        pkg.dependencies.bootstrap = '^4.0.0-beta.2';
         break;
       case 'Semantic UI':
         pkg.dependencies['semantic-ui-react'] = '^0.76.0';
         break;
     }
+
     if (this.props.thunk) {
       pkg.dependencies['redux-thunk'] = '^2.2.0';
     }

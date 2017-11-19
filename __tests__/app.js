@@ -52,6 +52,10 @@ describe('generator-react-app-redux:app', () => {
         'src/components/App.js',
         "import * as B from 'react-bootstrap';"
       );
+      assert.fileContent(
+        'src/components/App.js',
+        "require('bootstrap/' + bootstrapConfig.sass);"
+      );
     });
 
     test('babelrc', () => fs.readJson('.babelrc').then(assertBabelrc));
