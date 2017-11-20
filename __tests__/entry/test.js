@@ -89,10 +89,6 @@ function testSuite(
           generator._jsEntryFilePath,
           `import Main from '${generator._defaultContainerPath}';`
         );
-        assert.fileContent(
-          generator._jsEntryFilePath,
-          `const mainContainerPath = '${generator._defaultContainerPath}';`
-        );
       });
       test('imports store', () => {
         assert.fileContent(
@@ -143,7 +139,8 @@ function testSuite(
         style: generator.props.style,
         name: 'index',
         path: generator.props.name,
-        type: 'section'
+        type: 'section',
+        stylesheet: true
       }
     });
   });

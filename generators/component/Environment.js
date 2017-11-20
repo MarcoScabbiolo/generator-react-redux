@@ -10,4 +10,7 @@ module.exports = (BaseClass = DummyBaseClass) =>
     get _componentToCreateFilePath() {
       return path.join('src', this._componentToCreatePath) + '.js';
     }
+    get _stylesheetToCreateFilePath() {
+      return path.join('src', this._componentToCreatePath) + '.scss';
+    }
   };

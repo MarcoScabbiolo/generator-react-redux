@@ -35,13 +35,18 @@ module.exports = class extends environment(ReactReduxGenerator) {
     this.option('actions', {
       type: Object,
       required: false,
-      description:
+      desc:
         'The actions to import, the key is the local name and the value is the path to the file to import'
     });
     this.option('component', {
       type: String,
       required: false,
-      description: 'The path to the component to contain'
+      desc: 'The path to the component to contain'
+    });
+    this.option('state', {
+      type: Object,
+      required: false,
+      desc: 'An expression that will be the body of the mapStateToProps arrow function'
     });
   }
   get _componentName() {
@@ -83,6 +88,10 @@ module.exports = class extends environment(ReactReduxGenerator) {
     let exportDefault = astUtils.findDefaultExportDeclaration(ast);
 
     exportDefault.declaration.arguments.push(types.identifier(componentName));
+
+    if (this.props.state) {
+      exportDefault.declaration.callee.arguments[0].body = this.props.state;
+    }
 
     this.fs.write(
       this.destinationPath(this._containerToCreateFilePath),

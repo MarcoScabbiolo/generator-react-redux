@@ -34,7 +34,7 @@ const prompts = [
     ],
     default: 'standard',
     when: function() {
-      return !this.props.type;
+      return !_.isString(this.props.type);
     }
   },
   {
@@ -43,7 +43,16 @@ const prompts = [
     default: true,
     message: 'Do you want to include a container for this component?',
     when: function() {
-      return !this.props.container;
+      return !_.isBoolean(this.props.container);
+    }
+  },
+  {
+    name: 'stylesheet',
+    type: 'confirm',
+    default: false,
+    message: 'Do you want to include a stylesheet for this component?',
+    when: function() {
+      return !_.isBoolean(this.props.stylesheet);
     }
   }
 ];
@@ -66,6 +75,11 @@ module.exports = class extends environment(ReactReduxGenerator) {
       required: false,
       desc: 'Include react-bootstrap in this component'
     });
+    this.option('stylesheet', {
+      type: Boolean,
+      required: false,
+      desc: 'Include a stylesheet with this component'
+    });
   }
   initializing() {
     return this._initializing();
@@ -83,6 +97,13 @@ module.exports = class extends environment(ReactReduxGenerator) {
       ast = astUtils.importBootstrap(ast);
     } else if (this.props.style === 'Semantic UI') {
       ast = astUtils.importSemantic(ast);
+    }
+
+    if (this.props.stylesheet) {
+      ast = astUtils.newImport(
+        ast,
+        types.importDeclaration([], types.stringLiteral('./' + this.props.name + '.scss'))
+      );
     }
 
     let exportDefaultDeclaration = astUtils.findDefaultExportDeclaration(ast);
@@ -121,11 +142,25 @@ module.exports = class extends environment(ReactReduxGenerator) {
       astUtils.generate(ast)
     );
 
+    if (this.props.stylesheet) {
+      this.fs.write(this.destinationPath(this._stylesheetToCreateFilePath), '\n');
+    }
+
     if (this.props.container) {
+      let state;
+
+      if (this.props.type === 'section') {
+        state = types.memberExpression(
+          types.memberExpression(types.identifier('state'), types.identifier('sections')),
+          types.identifier(this.props.path)
+        );
+      }
+
       this.composeWith(require.resolve('../container'), {
         name: this.props.name,
         path: this.props.path,
-        component: this._componentToCreateFilePath
+        component: this._componentToCreateFilePath,
+        state
       });
     }
   }

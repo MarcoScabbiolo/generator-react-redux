@@ -13,7 +13,7 @@ const assertBabelrc = babelrc =>
   expect(babelrc)
     .to.have.property('plugins')
     .which.is.an('array')
-    .and.includes('react-hot-loader/babel');
+    .and.includes('transform-object-rest-spread');
 
 const assertAppComponentBootstrapFileContents = (includes = true) => {
   let assertComponent = includes ? assert.fileContent : assert.noFileContent;
@@ -47,6 +47,7 @@ describe('generator-react-app-redux:app', () => {
     assert.file([
       'src/actions/app.js',
       'src/components/App.js',
+      'src/components/app.scss',
       'src/containers/App.js',
       'src/reducers/app.js',
       'webpack/base.js',

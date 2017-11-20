@@ -122,22 +122,6 @@ module.exports = class extends ReactReduxGenerator {
         })
       );
     }
-
-    // Find the variable to hold the path to the main reducer needed for HMR
-    let mainReducerPathVariable = astUtils.findSingleVariableDeclaration(
-      ast,
-      'const',
-      'mainReducerPath'
-    );
-
-    assert.isOk(
-      mainReducerPathVariable,
-      'Could not find the declaration of the variable mainReducerPath in the store template'
-    );
-
-    mainReducerPathVariable.declarations[0].init.value = this._rootReducerPath;
-    mainReducerPathVariable.declarations[0].init.raw = `'${this.rootReducerPath}'`;
-
     // Find the middleware array
     let middlewareVariable = astUtils.findSingleVariableDeclaration(
       ast,

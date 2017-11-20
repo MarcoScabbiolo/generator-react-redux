@@ -5,11 +5,12 @@ const developmentWebpackConfiguration = Object.assign(baseWebpackConfiguration, 
   devtool: 'eval-source-map',
   devServer: {
     contentBase: './dist',
-    hot: true,
+    hot: true
   }
 });
 
-developmentWebpackConfiguration.entry.hmr = 'react-hot-loader/patch';
 developmentWebpackConfiguration.plugins.push(new webpack.HotModuleReplacementPlugin());
+developmentWebpackConfiguration.plugins.push(new webpack.NamedModulesPlugin());
+developmentWebpackConfiguration.plugins.push(new webpack.NoEmitOnErrorsPlugin());
 
 module.exports = developmentWebpackConfiguration;

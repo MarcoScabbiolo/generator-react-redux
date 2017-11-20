@@ -20,6 +20,7 @@ function testSuite(
       path: 'generator_tests',
       container: true,
       style: 'Bootstrap'
+      stylesheet: false
     },
     options: {}
   },
@@ -45,6 +46,15 @@ function testSuite(
             .expect(envFoo()._componentToCreateFilePath)
             .to.equal('src/components/foo/bar.js');
         });
+
+        test('stylesheet to create path', () => {
+          chai
+            .expect(envMain()._stylesheetToCreateFilePath)
+            .to.equal('src/components/main.scss');
+          chai
+            .expect(envFoo()._stylesheetToCreateFilePath)
+            .to.equal('src/components/foo/bar.scss');
+        });
       });
     }
     if (options.runGenerator) {
@@ -57,6 +67,11 @@ function testSuite(
 
     test('creates files', () => {
       assert.file([generator._componentToCreateFilePath]);
+      if (generator.props.stylesheet) {
+        assert.file([generator._stylesheetToCreateFilePath]);
+      } else {
+        assert.noFile([generator._stylesheetToCreateFilePath]);
+      }
     });
 
     testUtils.testFileContentsByProp({
@@ -65,6 +80,14 @@ function testSuite(
       prop: generator.props.style,
       file: generator._componentToCreateFilePath,
       content: "import * as B from 'react-bootstrap';"
+    });
+
+    testUtils.testFileContentsByProp({
+      testTrue: 'import the stylesheet',
+      testFalse: 'does not import the stylesheet',
+      prop: generator.props.stylesheet,
+      file: generator._componentToCreateFilePath,
+      content: `import './${generator.props.name}.scss';`
     });
   });
 

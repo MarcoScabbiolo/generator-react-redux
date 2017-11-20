@@ -38,6 +38,7 @@ module.exports = class extends Generator {
     return this.prompt(
       sharedPrompts.get(this.props, shared).concat([
         {
+          message: 'Use webpack-dashboard?',
           name: 'webpackdashboard',
           type: 'confirm',
           default: false,
@@ -99,22 +100,6 @@ module.exports = class extends Generator {
         types.importDeclaration(
           [],
           types.stringLiteral('../../node_modules/bootstrap/dist/css/bootstrap-theme.css')
-        )
-      );
-      component.program.body.splice(
-        astUtils.lastImportIndex(component),
-        0,
-        types.expressionStatement(
-          types.callExpression(types.identifier('require'), [
-            types.binaryExpression(
-              '+',
-              types.stringLiteral('bootstrap/'),
-              types.memberExpression(
-                types.identifier('bootstrapConfig'),
-                types.identifier('sass')
-              )
-            )
-          ])
         )
       );
     }

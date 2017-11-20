@@ -63,7 +63,8 @@ module.exports = class extends environment(ReactReduxGenerator) {
         path: this.props.name,
         style: this.props.style,
         container: true,
-        type: 'section'
+        type: 'section',
+        stylesheet: true
       });
     });
   }
@@ -93,23 +94,6 @@ module.exports = class extends environment(ReactReduxGenerator) {
       })
     );
 
-    // Set the main container path variable to be used by HMR
-    let mainContainerPathVariable = astUtils.findSingleVariableDeclaration(
-      ast,
-      'const',
-      'mainContainerPath'
-    );
-
-    assert.isOk(
-      mainContainerPathVariable,
-      'Could not find the declaration of the variable mainContainerPath in the JS entry template'
-    );
-
-    mainContainerPathVariable.declarations[0].init.value = this._defaultContainerPath;
-    mainContainerPathVariable.declarations[0].init.raw = `'${this
-      ._defaultContainerPath}'`;
-
-    // Write the ast and the untouched part of the file
     this.fs.write(this.destinationPath(this._jsEntryFilePath), astUtils.generate(ast));
   }
   _writeHTMLTemplate() {
