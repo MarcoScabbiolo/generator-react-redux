@@ -10,6 +10,6 @@ component({
     container: false
   },
   options: {
-    bootstrap: true
+    style: 'Bootstrap'
   }
 });

@@ -2,12 +2,20 @@ const _ = require('lodash');
 
 const prompts = [
   {
-    name: 'bootstrap',
-    message: 'Use react-bootstrap?',
+    name: 'style',
+    message: 'Which stylesheet provider do you want to use?',
+    type: 'list',
+    choices: ['Bootstrap', 'Semantic UI'],
+    store: true,
+    when: props => !_.isString(props.style)
+  },
+  {
+    name: 'semantic-ui',
+    message: 'Use semantic-ui-react?',
     type: 'confirm',
     default: false,
     store: true,
-    when: props => !_.isBoolean(props.bootstrap)
+    when: props => !_.isBoolean(props.semanticui)
   },
   {
     name: 'thunk',

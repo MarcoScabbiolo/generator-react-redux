@@ -19,7 +19,7 @@ function testSuite(
       name: 'test',
       path: 'generator_tests',
       container: true,
-      bootstrap: true,
+      style: 'Bootstrap'
       stylesheet: false
     },
     options: {}
@@ -77,7 +77,7 @@ function testSuite(
     testUtils.testFileContentsByProp({
       testTrue: 'imports react-bootstrap',
       testFalse: 'does not import react-bootrap',
-      prop: generator.props.bootstrap,
+      prop: generator.props.style,
       file: generator._componentToCreateFilePath,
       content: "import * as B from 'react-bootstrap';"
     });
