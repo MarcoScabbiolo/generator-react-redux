@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import './app.scss';
 
-class App extends Component {
+class App extends PureComponent {
   static propTypes = {
     initialized: PropTypes.bool.isRequired,
     onInitialize: PropTypes.func.isRequired

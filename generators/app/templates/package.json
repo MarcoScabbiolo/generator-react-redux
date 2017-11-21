@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "webpack-dev-server --open",
-    "build": "webpack --env dist"
+    "dist": "webpack --env dist"
   },
   "dependencies": {
     "react": "^16.0.0",
@@ -28,6 +28,11 @@
     "style-loader": "^0.19.0",
     "sass-loader": "^6.0.6",
     "file-loader": "^1.1.5",
-    "node-sass": "^4.7.1"
+    "node-sass": "^4.7.1",
+    "babel-eslint": "^8.0.2",
+    "postcss-loader": "^2.0.8",
+    "autoprefixer": "^7.1.6",
+    "uglifyjs-webpack-plugin": "^1.1.0",
+    "webpack-cleanup-plugin": "^0.5.1"
   }
 }

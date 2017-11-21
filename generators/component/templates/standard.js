@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
-class NewComponent extends Component {
+class NewComponent extends PureComponent {
   render() {
     return (
       null

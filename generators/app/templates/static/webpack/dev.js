@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const developmentWebpackConfiguration = Object.assign(baseWebpackConfiguration, {
   devtool: 'eval-source-map',
   devServer: {
-    contentBase: './dist',
+    contentBase: '../dist',
     hot: true
   }
 });

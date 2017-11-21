@@ -35,7 +35,6 @@
     "jest-cli": "^21.0.0",
     "lint-staged": "^4.2.1",
     "nsp": "^2.6.3",
-    "prettier": "^1.7.0",
     "yeoman-assert": "^3.1.0",
     "yeoman-test": "^1.7.0"
   },
@@ -43,6 +42,7 @@
     "babel-generator": "^6.26.0",
     "babel-types": "^6.26.0",
     "babylon": "^6.18.0",
+    "prettier": "^1.7.0",
     "chai": "^4.1.2",
     "chalk": "^2.1.0",
     "deep-extend": "^0.5.0",

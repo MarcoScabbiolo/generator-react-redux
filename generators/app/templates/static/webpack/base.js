@@ -37,15 +37,15 @@ _.forOwn(entries, (entry, name) => {
 });
 
 const extractCss = new ExtractTextPlugin({
-  filename: '[name].[contenthash].css',
+  filename: 'assets/[name].[contenthash].css',
   disable: development
 });
 
 const baseWebpackConfiguration = {
   entry: jsEntries,
   output: {
-    filename: '[name].[hash].js',
-    path: path.resolve(__dirname, 'dist')
+    filename: 'assets/[name].[hash].js',
+    path: path.resolve(__dirname, '../dist')
   },
   module: {
     rules: [
@@ -63,7 +63,14 @@ const baseWebpackConfiguration = {
             {
               loader: "css-loader",
               options: {
-                sourceMap: development
+                sourceMap: development,
+                minimize: !development
+              }
+            },
+            {
+              loader: "postcss-loader",
+              options: {
+                plugins: development ? undefined : [require('autoprefixer')()]
               }
             }
           ],
@@ -77,8 +84,16 @@ const baseWebpackConfiguration = {
             { 
               loader: "css-loader", 
               options: {
-                sourceMap: development
+                sourceMap: development,
+                minimize: !development
               } 
+            },
+            {
+              loader: "postcss-loader",
+              options: {
+                sourceMap: development,
+                plugins: development ? undefined : [require('autoprefixer')()]
+              }
             },
             { 
               loader: "sass-loader",
@@ -94,7 +109,7 @@ const baseWebpackConfiguration = {
         test: /\.(eot|svg|ttf|woff|woff2)$/,
         loader: 'file-loader',
         options: {
-          name: 'fonts/[name].[ext]'
+          name: 'assets/fonts/[name].[ext]'
         }
       }
     ]

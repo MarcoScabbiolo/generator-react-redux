@@ -21,7 +21,7 @@ Install [Yeoman][yeoman] if you don't have it yet.
 
 Run the generator:
 ```bash
-yo generator-react-app-redux
+yo react-app-redux
 ```
 
 [yeoman]: http://yeoman.io/

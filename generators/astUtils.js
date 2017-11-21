@@ -1,8 +1,10 @@
 const _ = require('lodash');
 const generator = require('babel-generator');
+const prettier = require('prettier');
 const babylon = require('babylon');
 const types = require('babel-types');
 const assert = require('chai').assert;
+const pkg = require('../package.json');
 
 function shorthandProperty(name) {
   return types.objectProperty(
@@ -67,7 +69,10 @@ function findDefaultExportDeclaration(ast) {
 }
 
 function generate(ast) {
-  return generator.default(ast, { quotes: 'single' }).code;
+  return prettier.format(
+    generator.default(ast, { quotes: 'single' }).code,
+    pkg.eslintConfig.rules['prettier/prettier'][1]
+  );
 }
 
 function parse(code) {
